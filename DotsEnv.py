@@ -4,11 +4,12 @@ import time
 
 pygame.init()
 
-N=99
-Steps=2
+N=400
+Steps=20
+r = 10
 
-SW=1366 
-SH=768
+SW=1000 
+SH=600
 OBS = 50
 
 screen = pygame.display.set_mode((SW,SH))
@@ -20,10 +21,10 @@ Dots = []
 for _ in range(N):
 	Dots.append([random.uniform(0,SW),random.uniform(0,SH),(random.randint(5,220),random.randint(5,220),random.randint(5,220))])
 
-def isCollision(A,B):
+def isCollision(A,B,r):
 	d = (A[0]-B[0])**2 + (A[1]-B[1])**2
 	d = d**0.5
-	if(d<10):
+	if(d <= 2*r):
 		return 1
 
 def print_text(text,x,y):
@@ -39,8 +40,8 @@ while(run*Q):
 	
 	clock.tick(60)
 	screen.fill((0,0,0))
-	print_text(f"Dots: {run}",1200,670)
-	print_text(f"Time: {time.perf_counter()-st}",1200,700)
+	print_text(f"Dots: {run}",SW-170,SH-100)
+	print_text(f"Time: {time.perf_counter()-st}",SW-166,SH-78)
 
 	
 	for event in pygame.event.get():
@@ -48,7 +49,7 @@ while(run*Q):
 			Q = 0
 	
 	for dot in Dots:
-		pygame.draw.circle(screen,dot[2],(dot[0],dot[1]),10)
+		pygame.draw.circle(screen,dot[2],(dot[0],dot[1]),r)
 	
 		dot[0]+= random.uniform(-Steps,Steps)
 		dot[1]+= random.uniform(-Steps,Steps)
@@ -67,7 +68,7 @@ while(run*Q):
 			dot[1] = SH-OBS
 
 		for b in Dots:
-			if( dot!=b and isCollision(dot,b)):
+			if( dot!=b and isCollision(dot,b,r)):
 				try:
 					Dots.remove(dot)
 					Dots.remove(b)
